@@ -8,6 +8,8 @@ def index(request):
     url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid=ab27c6408d2bf2ab57f572629eef037a'
 
     err_msg = ''
+    message = ''
+    message_class = ''
 
     if request.method == 'POST':
         form = CityForm(request.POST)
@@ -27,7 +29,12 @@ def index(request):
             else:
                 err_msg = 'City already exists in the database'
 
-    print(err_msg)
+        if err_msg:
+            message = err_msg
+            message_class = 'is-danger'
+        else:
+            message = 'City added successfully!'
+            message_class = 'is-success'
 
     form = CityForm()
 
@@ -48,5 +55,11 @@ def index(request):
 
         weather_data.append(city_weather)
 
-    context = {'weather_data': weather_data, 'form': form}
+    context = {
+        'weather_data': weather_data,
+        'form': form,
+        'message': message,
+        'message_class': message_class,
+    }
+
     return render(request, 'weather/weather.html', context)
