@@ -18,9 +18,16 @@ def index(request):
             # if the existing_city_count is 0, then the city is not duplicated
             existing_city_count = City.objects.filter(name=new_city).count()
             if existing_city_count == 0:
-                form.save()
+                # using the API to check if the city exists
+                r = requests.get(url.format(new_city)).json()
+                if r['cod'] == 200:
+                    form.save()
+                else:
+                    err_msg: 'City does not exist'
             else:
                 err_msg = 'City already exists in the database'
+
+    print(err_msg)
 
     form = CityForm()
 
