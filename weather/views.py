@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import requests
 from .models import City
 from .forms import CityForm
@@ -63,3 +63,9 @@ def index(request):
     }
 
     return render(request, 'weather/weather.html', context)
+
+
+def delete_city(request, city_name):
+    # here we query for the city and delete it and then redirects the user to home page
+    City.objects.get(name=city_name).delete()
+    return redirect('home')
